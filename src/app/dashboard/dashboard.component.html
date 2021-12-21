@@ -1,24 +1,14 @@
 <mat-toolbar color="primary">
   <span>TrackIt</span>
   <span class="flex"></span>
-  <button mat-icon-button (click)="signOut()"><mat-icon>logout</mat-icon></button>
+  <button mat-raised-button color="accent" (click)="addCategory()">Add category</button>
+  <button mat-icon-button (click)="signOut()" class="sign-out-button"><mat-icon>logout</mat-icon></button>
 </mat-toolbar>
 <section class="cards">
-  <div class="card">
-    <mat-card>
-      <mat-card-title>Work coding</mat-card-title>
-    </mat-card>
-  </div>
-
-  <div class="card">
-    <mat-card>
-      <mat-card-title>Work meetings</mat-card-title>
-    </mat-card>
-  </div>
-
-  <div class="card">
-    <mat-card>
-      <mat-card-title>Leetcode</mat-card-title>
+  <div class="card" *ngFor="let category of categories">
+    <mat-card (click)="toggle(category.id)">
+      <mat-card-title>{{category.name}}</mat-card-title>
+      <mat-card-subtitle>time: 00:00</mat-card-subtitle>
     </mat-card>
   </div>
 </section>

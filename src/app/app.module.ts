@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthModule } from "./auth/auth.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { AngularFireModule } from "@angular/fire/compat";
+import { DashboardModule } from "./dashboard";
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { AngularFireModule } from "@angular/fire/compat";
     AppRoutingModule,
 
     AuthModule,
+    DashboardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

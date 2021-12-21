@@ -2,6 +2,10 @@
   flex: 1;
 }
 
+.sign-out-button {
+  margin-left: 32px;
+}
+
 .cards {
   display: flex;
   flex-wrap: wrap;
@@ -13,10 +17,9 @@
     .mat-card {
       background: #fafafa;
       cursor: pointer;
-      width: 200px;
-      height: 200px;
 
-      &:hover {
+      &:hover,
+      &.active {
         background: #eaeaea;
       }
     }
