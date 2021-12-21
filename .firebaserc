@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "track-it-store": {
+      "hosting": {
+        "trackit": [
+          "track-it-store"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "track-it-store"
+  }
+}
