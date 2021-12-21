@@ -5,8 +5,10 @@ import { AppComponent } from './app.component';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthModule } from "./auth/auth.module";
+import { AppRoutingModule } from "./app-routing.module";
+import { AngularFireModule } from "@angular/fire/compat";
 
 @NgModule({
   declarations: [
@@ -16,8 +18,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    BrowserAnimationsModule
+    AngularFireModule.initializeApp(environment.firebase),
+    BrowserAnimationsModule,
+
+    AppRoutingModule,
+
+    AuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
