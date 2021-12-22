@@ -5,6 +5,7 @@ import { NgModule } from "@angular/core";
 import { AngularFireAuthGuard } from "@angular/fire/compat/auth-guard";
 import { redirectLoggedInTo, redirectUnauthorizedTo } from "@angular/fire/auth-guard";
 import { DashboardComponent } from "./dashboard";
+import { SignUpComponent } from "./auth/sign-up";
 
 const redirectUnauthorizedToSignIn = () => redirectUnauthorizedTo(['sign-in']);
 const redirectAuthorizedToDashboard = () => redirectLoggedInTo(['dashboard']);
@@ -26,6 +27,10 @@ const routes: Routes = [
       {
         path: 'sign-in',
         component: SignInComponent
+      },
+      {
+        path: 'sign-up',
+        component: SignUpComponent
       },
     ]
   },
