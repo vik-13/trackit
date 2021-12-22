@@ -3,18 +3,21 @@ import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { AddCategoryDialogComponent } from "./add-category-dialog";
-import { tap } from "rxjs";
+import { interval, map, Observable, of, switchMap, tap } from "rxjs";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { Category } from "./dashboard";
+import { Active, Category } from "./dashboard";
+import firebase from "firebase/compat";
+import User = firebase.User;
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: 'dashboard.component.html',
+  templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {
-  categories: Category[] = [];
+  categories$: Observable<Category[]>;
+  active$: Observable<Active | null>;
   userId?: string;
 
   constructor(private _auth: AngularFireAuth,
@@ -22,21 +25,39 @@ export class DashboardComponent {
               private _router: Router,
               private _changeDetectorRef: ChangeDetectorRef,
               private _dialog: MatDialog) {
-    this._auth.user.pipe(
-      tap((user) => {
+    this.active$ = this._auth.user.pipe(
+      switchMap((user: User | null) => {
         if (user) {
-          this.userId = user.uid;
-
-          this._store.collection<Category>(`users/${this.userId}/categories`).valueChanges({ idField: 'id' }).subscribe((data) => {
-            this.categories = data;
-            console.log(data);
-            this._changeDetectorRef.markForCheck();
-          });
+          return this._store.doc(`users/${user.uid}`).valueChanges().pipe(map((data: any) => {
+            if (data) {
+              return data.active;
+            } else {
+              return null;
+            }
+          }));
         } else {
-          this.userId = undefined;
+          return of(null);
+        }
+      }),
+      switchMap((active: Active | null) => {
+        if (active) {
+          return interval(1000).pipe(map(() => active));
+        } else {
+          return of(active);
         }
       })
-    ).subscribe();
+    );
+
+    this.categories$ = this._auth.user.pipe(
+      switchMap((user: User | null) => {
+        if (user) {
+          this.userId = user.uid;
+          return this._store.collection<Category>(`users/${user.uid}/categories`).valueChanges({ idField: 'id' });
+        } else {
+          return of([]);
+        }
+      })
+    );
   }
 
   addCategory() {
@@ -45,16 +66,56 @@ export class DashboardComponent {
         if (value) {
           this._store.collection(`users/${this.userId}/categories`).add({
             name: value,
+            total: 0
           }).catch();
         }
       }))
       .subscribe();
   }
 
-  toggle(id: string): void {
-    this._store.collection(`users/${this.userId}/categories/${id}/times`).add({
-      start: +new Date()
-    }).catch();
+  toggle(categories: Category[] | null, category: Category, active: Active | null): void {
+    console.log(active);
+    if (active) {
+      if (active.categoryId === category.id) {
+        const end = +new Date();
+        this._store.doc(`users/${this.userId}`).set({active: null});
+        this._store.doc(`users/${this.userId}/categories/${category.id}`).update({total: category.total + Math.floor((end - active.started) / 1000)});
+        this._store.collection(`users/${this.userId}/categories/${category.id}/times`).add({
+          start: active.started,
+          end
+        }).catch();
+      } else {
+        const end = +new Date();
+        const activeCategory = (categories || []).filter((c: Category) => c.id === active.categoryId);
+        const total = activeCategory.length ? activeCategory[0].total : 0;
+        this._store.doc(`users/${this.userId}`).set({
+          active: {
+            started: +new Date(),
+            categoryId: category.id
+          }
+        });
+        this._store.doc(`users/${this.userId}/categories/${active.categoryId}`).update({total: total + Math.floor((end - active.started) / 1000)});
+        this._store.collection(`users/${this.userId}/categories/${active.categoryId}/times`).add({
+          start: active.started,
+          end
+        }).catch();
+      }
+    } else {
+      this._store.doc(`users/${this.userId}`).update({
+        active: {
+          started: +new Date(),
+          categoryId: category.id
+        }
+      });
+    }
+  }
+
+  showTime(category: Category, active: Active | null): number {
+    if (active && active.categoryId === category.id) {
+      return (category.total || 0) + Math.floor((+new Date() - active.started) / 1000);
+    } else {
+      return category.total || 0;
+    }
   }
 
   signOut(): void {
