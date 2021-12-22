@@ -18,10 +18,26 @@
       background: #fafafa;
       cursor: pointer;
 
-      &:hover,
+      &:hover {
+        background: rgba(#3f51b5, .4);
+      }
+
       &.active {
-        background: #eaeaea;
+        animation: 3s linear infinite blink;
+        background: rgba(#3f51b5, .4);
       }
     }
+  }
+}
+
+@keyframes blink {
+  0% {
+    background: rgba(#3f51b5, .4);
+  }
+  50% {
+    background: rgba(#3f51b5, .1);
+  }
+  100% {
+    background: rgba(#3f51b5, .4);
   }
 }

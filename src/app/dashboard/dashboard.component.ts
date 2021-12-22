@@ -3,7 +3,7 @@ import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { AddCategoryDialogComponent } from "./add-category-dialog";
-import { interval, map, Observable, of, switchMap, tap } from "rxjs";
+import { interval, map, Observable, of, switchMap, tap, timer } from "rxjs";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { Active, Category } from "./dashboard";
 import firebase from "firebase/compat";
@@ -41,7 +41,7 @@ export class DashboardComponent {
       }),
       switchMap((active: Active | null) => {
         if (active) {
-          return interval(1000).pipe(map(() => active));
+          return timer(0, 1000).pipe(map(() => active));
         } else {
           return of(active);
         }
@@ -74,11 +74,10 @@ export class DashboardComponent {
   }
 
   toggle(categories: Category[] | null, category: Category, active: Active | null): void {
-    console.log(active);
     if (active) {
       if (active.categoryId === category.id) {
         const end = +new Date();
-        this._store.doc(`users/${this.userId}`).set({active: null});
+        this._store.doc(`users/${this.userId}`).set({active: null}).catch();
         this._store.doc(`users/${this.userId}/categories/${category.id}`).update({total: category.total + Math.floor((end - active.started) / 1000)});
         this._store.collection(`users/${this.userId}/categories/${category.id}/times`).add({
           start: active.started,
@@ -93,7 +92,7 @@ export class DashboardComponent {
             started: +new Date(),
             categoryId: category.id
           }
-        });
+        }).catch();
         this._store.doc(`users/${this.userId}/categories/${active.categoryId}`).update({total: total + Math.floor((end - active.started) / 1000)});
         this._store.collection(`users/${this.userId}/categories/${active.categoryId}/times`).add({
           start: active.started,
@@ -101,12 +100,12 @@ export class DashboardComponent {
         }).catch();
       }
     } else {
-      this._store.doc(`users/${this.userId}`).update({
+      this._store.doc(`users/${this.userId}`).set({
         active: {
           started: +new Date(),
           categoryId: category.id
         }
-      });
+      }).catch();
     }
   }
 
