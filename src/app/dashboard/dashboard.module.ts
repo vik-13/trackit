@@ -7,6 +7,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatDialogModule } from "@angular/material/dialog";
 import { AddCategoryDialogModule } from "./add-category-dialog";
 import { CommonModule } from "@angular/common";
+import { TimeModule } from "../shared/time/time.module";
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CommonModule } from "@angular/common";
     MatCardModule,
     MatDialogModule,
 
-    AddCategoryDialogModule
+    AddCategoryDialogModule,
+    TimeModule
   ],
   exports: [
     DashboardComponent

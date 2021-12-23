@@ -4,7 +4,7 @@ import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-sign-in',
+  selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
