@@ -10,6 +10,8 @@ import { AuthModule } from "./auth/auth.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { AngularFireModule } from "@angular/fire/compat";
 import { DashboardModule } from "./dashboard";
+import { EditModule } from "./edit";
+import { InternalZoneModule } from "./zones/internal-zone";
 
 @NgModule({
   declarations: [
@@ -24,8 +26,10 @@ import { DashboardModule } from "./dashboard";
 
     AppRoutingModule,
 
+    InternalZoneModule,
     AuthModule,
-    DashboardModule
+    DashboardModule,
+    EditModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

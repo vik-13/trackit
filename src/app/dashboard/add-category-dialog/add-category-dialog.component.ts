@@ -3,7 +3,7 @@ import { NgForm } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-  selector: 'app-add-category-dialog',
+  selector: 'app-category-dialog',
   templateUrl: './add-category-dialog.component.html',
   styleUrls: ['./add-category-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -6,6 +6,8 @@ import { AngularFireAuthGuard } from "@angular/fire/compat/auth-guard";
 import { redirectLoggedInTo, redirectUnauthorizedTo } from "@angular/fire/auth-guard";
 import { DashboardComponent } from "./dashboard";
 import { SignUpComponent } from "./auth/sign-up";
+import { EditComponent } from "./edit";
+import { InternalZoneComponent } from "./zones/internal-zone";
 
 const redirectUnauthorizedToSignIn = () => redirectUnauthorizedTo(['sign-in']);
 const redirectAuthorizedToDashboard = () => redirectLoggedInTo(['dashboard']);
@@ -35,12 +37,22 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
+    path: '',
+    component: InternalZoneComponent,
     canActivate: [AngularFireAuthGuard],
     data: {
       authGuardPipe: redirectUnauthorizedToSignIn,
-    }
+    },
+    children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
+      {
+        path: 'edit',
+        component: EditComponent,
+      },
+    ]
   },
   {
     path: '**',

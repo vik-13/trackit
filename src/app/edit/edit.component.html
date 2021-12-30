@@ -1,0 +1,16 @@
+<section class="cards" *ngIf="{active: active$ | async, categories: categories$ | async} as data">
+  <div class="card" *ngFor="let category of data.categories">
+    <mat-card [class.active]="data.active && data.active.categoryId === category.id">
+      <mat-card-title>{{category.name}}</mat-card-title>
+      <mat-card-subtitle>time: {{showTime(category, data.active) | appTime}}</mat-card-subtitle>
+      <mat-card-actions align="end">
+        <button mat-raised-button (click)="editCategory(category.id, category.name)">Edit</button>
+        <button mat-raised-button color="warn" (click)="removeCategory(category.id, category.name)">Remove</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</section>
+
+<div class="add-category">
+  <button mat-fab (click)="addCategory()"><mat-icon>add</mat-icon></button>
+</div>

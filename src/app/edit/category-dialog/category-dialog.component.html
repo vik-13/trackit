@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>
+  <span *ngIf="!data?.name">Add Category</span>
+  <span *ngIf="data?.name">Edit Category</span>
+</h1>
+<form #form="ngForm" (ngSubmit)="submit(form)" autocomplete="off" novalidate>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput name="name" [ngModel]="data?.name" required>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button type="submit" mat-raised-button color="accent">
+      <span *ngIf="!data?.name">Add</span>
+      <span *ngIf="data?.name">Update</span>
+    </button>
+  </div>
+</form>

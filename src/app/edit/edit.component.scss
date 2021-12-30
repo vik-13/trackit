@@ -1,0 +1,15 @@
+.add-category {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 16px 16px 120px;
+
+  .card {
+    padding: 16px;
+  }
+}

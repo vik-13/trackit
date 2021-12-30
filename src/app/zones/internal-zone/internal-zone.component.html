@@ -1,0 +1,20 @@
+<mat-toolbar color="primary">
+  <span>TrackIt</span>
+  <span class="flex"></span>
+  <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+  <mat-menu #menu="matMenu">
+    <a class="navigation-link" mat-menu-item routerLink="/dashboard" routerLinkActive="active">
+      <mat-icon>grid_view</mat-icon>
+      <span>View mode</span>
+    </a>
+    <a class="navigation-link" mat-menu-item routerLink="/edit" routerLinkActive="active">
+      <mat-icon>edit</mat-icon>
+      <span>Edit mode</span>
+    </a>
+    <button mat-menu-item>
+      <mat-icon>logout</mat-icon>
+      <span>Sign out</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>
+<router-outlet></router-outlet>
