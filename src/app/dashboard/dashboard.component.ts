@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/
 import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
-import { AddCategoryDialogComponent } from "./add-category-dialog";
-import { interval, map, Observable, of, switchMap, tap, timer } from "rxjs";
+import { map, Observable, of, switchMap, timer } from "rxjs";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { Active, Category } from "./dashboard";
 import firebase from "firebase/compat";
@@ -60,19 +59,6 @@ export class DashboardComponent {
     );
   }
 
-  addCategory() {
-    this._dialog.open(AddCategoryDialogComponent).afterClosed()
-      .pipe(tap((value?: string) => {
-        if (value) {
-          this._store.collection(`users/${this.userId}/categories`).add({
-            name: value,
-            total: 0
-          }).catch();
-        }
-      }))
-      .subscribe();
-  }
-
   toggle(categories: Category[] | null, category: Category, active: Active | null): void {
     if (active) {
       if (active.categoryId === category.id) {
@@ -115,11 +101,5 @@ export class DashboardComponent {
     } else {
       return category.total || 0;
     }
-  }
-
-  signOut(): void {
-    this._auth.signOut().then(() => {
-      this._router.navigate(['sign-in']).catch();
-    }).catch();
   }
 }

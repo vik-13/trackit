@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { EditComponent } from "./edit.component";
-import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatCardModule } from "@angular/material/card";
@@ -16,7 +15,6 @@ import { RemoveDialogModule } from "./remove-dialog";
   ],
   imports: [
     CommonModule,
-    MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule,
