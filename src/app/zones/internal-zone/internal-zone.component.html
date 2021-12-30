@@ -1,6 +1,10 @@
 <mat-toolbar color="primary">
   <span>TrackIt</span>
-  <span class="flex"></span>
+  <span class="flex">
+    <ng-container *ngIf="active$ | async as active">
+      {{getCurrentTime(active.started) | appTime}}
+    </ng-container>
+  </span>
   <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
   <mat-menu #menu="matMenu">
     <a class="navigation-link" mat-menu-item routerLink="/dashboard" routerLinkActive="active">
