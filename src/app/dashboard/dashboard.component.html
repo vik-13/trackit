@@ -1,8 +1,13 @@
-<section class="cards" *ngIf="{active: active$ | async, categories: categories$ | async} as data">
-  <div class="card" *ngFor="let category of data.categories">
-    <mat-card (click)="toggle(data.categories, category, data.active)" [class.active]="data.active && data.active.categoryId === category.id">
-      <mat-card-title>{{category.name}}</mat-card-title>
-      <mat-card-subtitle>time: {{showTime(category, data.active) | appTime}}</mat-card-subtitle>
-    </mat-card>
-  </div>
-</section>
+<ng-container *ngIf="{active: active$ | async, categories: categories$ | async} as data">
+  <section class="cards" *ngIf="data.categories?.length">
+    <div class="card" *ngFor="let category of data.categories">
+      <mat-card (click)="toggle(data.categories, category, data.active)" [class.active]="data.active && data.active.categoryId === category.id">
+        <mat-card-title>{{category.name}}</mat-card-title>
+        <mat-card-subtitle>time: {{showTime(category, data.active) | appTime}}</mat-card-subtitle>
+      </mat-card>
+    </div>
+  </section>
+  <section class="no-content" *ngIf="!data.categories?.length">
+    <h3>Don't you have anything to track yet? <br/>Just <a href="" (click)="addCategory($event)">Create</a> or go to the <a routerLink="/edit">Edit Mode</a>.</h3>
+  </section>
+</ng-container>

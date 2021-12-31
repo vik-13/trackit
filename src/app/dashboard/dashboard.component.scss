@@ -22,6 +22,18 @@
   }
 }
 
+.no-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 64px);
+
+  h3 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
 @keyframes blink {
   0% {
     background: rgba(#3f51b5, .4);
