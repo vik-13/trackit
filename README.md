@@ -1,6 +1,6 @@
 # Trackit
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.2.
+It's hosted on firebase https://track-it-store.firebaseapp.com
 
 ## Development server
 
