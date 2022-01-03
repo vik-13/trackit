@@ -6,12 +6,12 @@ import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthModule } from "./auth/auth.module";
-import { AppRoutingModule } from "./app-routing.module";
-import { AngularFireModule } from "@angular/fire/compat";
-import { DashboardModule } from "./dashboard";
-import { EditModule } from "./edit";
-import { InternalZoneModule } from "./zones/internal-zone";
+import { AuthModule } from './auth/auth.module';
+import { AppRoutingModule } from './app-routing.module';
+import { AngularFireModule } from '@angular/fire/compat';
+import { DashboardModule } from './dashboard';
+import { EditModule } from './edit';
+import { InternalZoneModule } from './zones/internal-zone';
 
 @NgModule({
   declarations: [

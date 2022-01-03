@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { AngularFireAuth } from "@angular/fire/compat/auth";
-import { Router } from "@angular/router";
-import { MatDialog } from "@angular/material/dialog";
-import { CategoryDialogComponent } from "./category-dialog";
-import { map, Observable, of, switchMap, tap, timer } from "rxjs";
-import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { Active, Category } from "./edit";
-import firebase from "firebase/compat";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivityDialogComponent } from './activity-dialog';
+import { map, Observable, of, switchMap, tap, timer } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import firebase from 'firebase/compat';
 import User = firebase.User;
-import { RemoveDialogComponent } from "./remove-dialog";
+import { RemoveDialogComponent } from './remove-dialog';
+import { ActiveState, Activity } from '../shared/activity';
 
 @Component({
   selector: 'app-edit',
@@ -17,8 +17,8 @@ import { RemoveDialogComponent } from "./remove-dialog";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditComponent {
-  categories$: Observable<Category[]>;
-  active$: Observable<Active | null>;
+  activities$: Observable<Activity[]>;
+  active$: Observable<ActiveState | null>;
   userId?: string;
 
   constructor(private _auth: AngularFireAuth,
@@ -40,7 +40,7 @@ export class EditComponent {
           return of(null);
         }
       }),
-      switchMap((active: Active | null) => {
+      switchMap((active: ActiveState | null) => {
         if (active) {
           return timer(0, 1000).pipe(map(() => active));
         } else {
@@ -49,11 +49,11 @@ export class EditComponent {
       })
     );
 
-    this.categories$ = this._auth.user.pipe(
+    this.activities$ = this._auth.user.pipe(
       switchMap((user: User | null) => {
         if (user) {
           this.userId = user.uid;
-          return this._store.collection<Category>(`users/${user.uid}/categories`).valueChanges({ idField: 'id' });
+          return this._store.collection<Activity>(`users/${user.uid}/activities`).valueChanges({ idField: 'id' });
         } else {
           return of([]);
         }
@@ -61,11 +61,11 @@ export class EditComponent {
     );
   }
 
-  addCategory() {
-    this._dialog.open(CategoryDialogComponent).afterClosed()
+  addActivity() {
+    this._dialog.open(ActivityDialogComponent).afterClosed()
       .pipe(tap((value?: string) => {
         if (value) {
-          this._store.collection(`users/${this.userId}/categories`).add({
+          this._store.collection(`users/${this.userId}/activities`).add({
             name: value,
             total: 0
           }).catch();
@@ -74,15 +74,15 @@ export class EditComponent {
       .subscribe();
   }
 
-  editCategory(id: string, name: string): void {
-    this._dialog.open(CategoryDialogComponent, {
+  editActivity(id: string, name: string): void {
+    this._dialog.open(ActivityDialogComponent, {
       data: {
         name
       }
     }).afterClosed()
       .pipe(tap((value?: string) => {
         if (value) {
-          this._store.doc(`users/${this.userId}/categories/${id}`).update({
+          this._store.doc(`users/${this.userId}/activities/${id}`).update({
             name: value
           }).catch();
         }
@@ -90,7 +90,7 @@ export class EditComponent {
       .subscribe();
   }
 
-  removeCategory(id: string, name: string): void {
+  removeActivity(id: string, name: string): void {
     this._dialog.open(RemoveDialogComponent, {
       data: {
         name
@@ -98,34 +98,34 @@ export class EditComponent {
     }).afterClosed()
       .pipe(tap((confirmed: boolean) => {
         if (confirmed) {
-          this._store.doc(`users/${this.userId}/categories/${id}`).delete().catch();
+          this._store.doc(`users/${this.userId}/activities/${id}`).delete().catch();
         }
       }))
       .subscribe();
   }
 
-  toggle(categories: Category[] | null, category: Category, active: Active | null): void {
+  toggle(activities: Activity[] | null, activity: Activity, active: ActiveState | null): void {
     if (active) {
-      if (active.categoryId === category.id) {
+      if (active.activityId === activity.id) {
         const end = +new Date();
         this._store.doc(`users/${this.userId}`).set({active: null}).catch();
-        this._store.doc(`users/${this.userId}/categories/${category.id}`).update({total: category.total + Math.floor((end - active.started) / 1000)});
-        this._store.collection(`users/${this.userId}/categories/${category.id}/times`).add({
+        this._store.doc(`users/${this.userId}/activities/${activity.id}`).update({total: activity.total + Math.floor((end - active.started) / 1000)});
+        this._store.collection(`users/${this.userId}/activities/${activity.id}/times`).add({
           start: active.started,
           end
         }).catch();
       } else {
         const end = +new Date();
-        const activeCategory = (categories || []).filter((c: Category) => c.id === active.categoryId);
-        const total = activeCategory.length ? activeCategory[0].total : 0;
+        const currentActivity = (activities || []).filter((c: Activity) => c.id === active.activityId);
+        const total = currentActivity.length ? currentActivity[0].total : 0;
         this._store.doc(`users/${this.userId}`).set({
           active: {
             started: +new Date(),
-            categoryId: category.id
-          }
+            activityId: activity.id
+          } as ActiveState
         }).catch();
-        this._store.doc(`users/${this.userId}/categories/${active.categoryId}`).update({total: total + Math.floor((end - active.started) / 1000)});
-        this._store.collection(`users/${this.userId}/categories/${active.categoryId}/times`).add({
+        this._store.doc(`users/${this.userId}/activities/${active.activityId}`).update({total: total + Math.floor((end - active.started) / 1000)});
+        this._store.collection(`users/${this.userId}/activities/${active.activityId}/times`).add({
           start: active.started,
           end
         }).catch();
@@ -134,17 +134,17 @@ export class EditComponent {
       this._store.doc(`users/${this.userId}`).set({
         active: {
           started: +new Date(),
-          categoryId: category.id
-        }
+          activityId: activity.id
+        } as ActiveState
       }).catch();
     }
   }
 
-  showTime(category: Category, active: Active | null): number {
-    if (active && active.categoryId === category.id) {
-      return (category.total || 0) + Math.floor((+new Date() - active.started) / 1000);
+  showTime(activity: Activity, active: ActiveState | null): number {
+    if (active && active.activityId === activity.id) {
+      return (activity.total || 0) + Math.floor((+new Date() - active.started) / 1000);
     } else {
-      return category.total || 0;
+      return activity.total || 0;
     }
   }
 

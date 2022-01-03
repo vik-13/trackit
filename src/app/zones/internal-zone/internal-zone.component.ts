@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { AngularFireAuth } from "@angular/fire/compat/auth";
-import { Router } from "@angular/router";
-import { map, Observable, of, switchMap, timer } from "rxjs";
-import { Active } from "../../edit/edit";
-import { AngularFirestore } from "@angular/fire/compat/firestore";
-import firebase from "firebase/compat";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
+import { map, Observable, of, switchMap, timer } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import firebase from 'firebase/compat';
+import { ActiveState } from 'src/app/shared/activity';
 import User = firebase.User;
 
 @Component({
@@ -14,7 +14,7 @@ import User = firebase.User;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InternalZoneComponent {
-  active$: Observable<Active | null>;
+  active$: Observable<ActiveState | null>;
 
   constructor(private _auth: AngularFireAuth, private _store: AngularFirestore, private _router: Router) {
     this.active$ = this._auth.user.pipe(
@@ -31,7 +31,7 @@ export class InternalZoneComponent {
           return of(null);
         }
       }),
-      switchMap((active: Active | null) => {
+      switchMap((active: ActiveState | null) => {
         if (active) {
           return timer(0, 1000).pipe(map(() => active));
         } else {

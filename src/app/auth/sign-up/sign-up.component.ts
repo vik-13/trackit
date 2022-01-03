@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { NgForm } from "@angular/forms";
-import { AngularFireAuth } from "@angular/fire/compat/auth";
-import { Router } from "@angular/router";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',

@@ -1,13 +1,13 @@
-import { RouterModule, Routes } from "@angular/router";
-import { SignInComponent } from "./auth/sign-in";
-import { AuthComponent } from "./auth/auth.component";
-import { NgModule } from "@angular/core";
-import { AngularFireAuthGuard } from "@angular/fire/compat/auth-guard";
-import { redirectLoggedInTo, redirectUnauthorizedTo } from "@angular/fire/auth-guard";
-import { DashboardComponent } from "./dashboard";
-import { SignUpComponent } from "./auth/sign-up";
-import { EditComponent } from "./edit";
-import { InternalZoneComponent } from "./zones/internal-zone";
+import { RouterModule, Routes } from '@angular/router';
+import { SignInComponent } from './auth/sign-in';
+import { AuthComponent } from './auth/auth.component';
+import { NgModule } from '@angular/core';
+import { AngularFireAuthGuard } from '@angular/fire/compat/auth-guard';
+import { redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+import { DashboardComponent } from './dashboard';
+import { SignUpComponent } from './auth/sign-up';
+import { EditComponent } from './edit';
+import { InternalZoneComponent } from './zones/internal-zone';
 
 const redirectUnauthorizedToSignIn = () => redirectUnauthorizedTo(['sign-in']);
 const redirectAuthorizedToDashboard = () => redirectLoggedInTo(['dashboard']);

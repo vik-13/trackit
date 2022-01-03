@@ -1,11 +1,11 @@
-export interface Category {
+export interface Activity {
   id: string;
   name: string;
   total: number;
   times?: any[];
 }
 
-export interface Active {
+export interface ActiveState {
   started: number;
-  categoryId: string;
+  activityId: string;
 }
